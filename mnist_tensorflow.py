@@ -1,14 +1,10 @@
-import numpy as np 
+# https://medium.com/analytics-vidhya/a-brief-study-of-convolutional-neural-network-cnn-using-mnist-digit-recognizer-e054cf8863bf
+
+import numpy as np
 import pandas as pd
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-
-# importing files from Google Drive into Google Colab
-# from google.colab import drive
-# drive.mount('/content/drive/', force_remount=True)
-# train = pd.read_csv('/content/drive/My Drive/Colab Notebooks/mnist/mnist-train.csv')
-# test = pd.read_csv('/content/drive/My Drive/Colab Notebooks/mnist/mnist-test.csv')
 
 # importing files
 train = pd.read_csv('data/mnist-train.csv')
