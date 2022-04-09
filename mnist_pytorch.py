@@ -9,6 +9,7 @@ device
 
 """**Save the files into dataframes**"""
 
+# Importing dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
 train_data = datasets.MNIST(
@@ -23,33 +24,29 @@ test_data = datasets.MNIST(
 	transform = ToTensor()
 )
 
-# importing files
-train_data = pd.read_csv('data/mnist-train.csv')
-test_data = pd.read_csv('data/mnist-test.csv')
+# # Print train_data and test_data size
+# print(train_data)
+# print(train_data.data.size())
+# print(train_data.targets.size())
+# print(test_data)
 
-# Print train_data and test_data size
-print(train_data)
-print(train_data.data.size())
-print(train_data.targets.size())
-print(test_data)
+# # Plot one train_data
+# import matplotlib.pyplot as plt
+# plt.imshow(train_data.data[0], cmap='gray')
+# plt.title('%i' % train_data.targets[0])
+# plt.show()
 
-# Plot one train_data
-import matplotlib.pyplot as plt
-plt.imshow(train_data.data[0], cmap='gray')
-plt.title('%i' % train_data.targets[0])
-plt.show()
-
-# Plot multiple train_data
-figure = plt.figure(figsize=(10, 8))
-cols, rows = 5, 5
-for i in range(1, cols * rows + 1):
-	sample_idx = torch.randint(len(train_data), size=(1,)).item()
-	img, label = train_data[sample_idx]
-	figure.add_subplot(rows, cols, i)
-	plt.title(label)
-	plt.axis("off")
-	plt.imshow(img.squeeze(), cmap="gray")
-plt.show()
+# # Plot multiple train_data
+# figure = plt.figure(figsize=(10, 8))
+# cols, rows = 5, 5
+# for i in range(1, cols * rows + 1):
+# 	sample_idx = torch.randint(len(train_data), size=(1,)).item()
+# 	img, label = train_data[sample_idx]
+# 	figure.add_subplot(rows, cols, i)
+# 	plt.title(label)
+# 	plt.axis("off")
+# 	plt.imshow(img.squeeze(), cmap="gray")
+# plt.show()
 
 """Preparing data for training with DataLoaders
 
