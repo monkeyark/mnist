@@ -1,7 +1,6 @@
 # https://medium.com/@nutanbhogendrasharma/pytorch-convolutional-neural-network-with-mnist-dataset-4e8a4265e118
 
 import torch
-import pandas as pd
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -40,12 +39,12 @@ test_data = datasets.MNIST(
 # figure = plt.figure(figsize=(10, 8))
 # cols, rows = 5, 5
 # for i in range(1, cols * rows + 1):
-# 	sample_idx = torch.randint(len(train_data), size=(1,)).item()
+# 	sample_idx = torch.randint(len(train_data), size = (1,)).item()
 # 	img, label = train_data[sample_idx]
 # 	figure.add_subplot(rows, cols, i)
 # 	plt.title(label)
 # 	plt.axis("off")
-# 	plt.imshow(img.squeeze(), cmap="gray")
+# 	plt.imshow(img.squeeze(), cmap = "gray")
 # plt.show()
 
 """Preparing data for training with DataLoaders
@@ -57,15 +56,17 @@ DataLoader is an iterable that abstracts this complexity for us in an easy API.
 
 from torch.utils.data import DataLoader
 loaders = {
-	'train' : torch.utils.data.DataLoader(train_data,
-										batch_size=100,
-										shuffle=True,
-										num_workers=1),
-	
-	'test'  : torch.utils.data.DataLoader(test_data,
-										batch_size=100,
-										shuffle=True,
-										num_workers=1),
+	'train' : DataLoader(
+		train_data,
+		batch_size = 100,
+		shuffle = True,
+		num_workers = 1),
+
+	'test'  : DataLoader(
+		test_data,
+		batch_size = 100,
+		shuffle = True,
+		num_workers = 1),
 }
 loaders
 
@@ -75,14 +76,14 @@ class CNN(nn.Module):
 		super(CNN, self).__init__()
 		self.conv1 = nn.Sequential(
 			nn.Conv2d(
-				in_channels=1,
-				out_channels=16,
-				kernel_size=5,
-				stride=1,
-				padding=2,
+				in_channels = 1,
+				out_channels = 16,
+				kernel_size = 5,
+				stride = 1,
+				padding = 2,
 			),
 			nn.ReLU(),
-			nn.MaxPool2d(kernel_size=2),
+			nn.MaxPool2d(kernel_size = 2),
 		)
 		self.conv2 = nn.Sequential(
 			nn.Conv2d(16, 32, 5, 1, 2),
