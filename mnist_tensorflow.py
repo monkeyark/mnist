@@ -10,8 +10,6 @@ from tensorflow import keras
 train = pd.read_csv('data/mnist-train.csv')
 test = pd.read_csv('data/mnist-test.csv')
 
-train
-
 """**Separating the data and label**"""
 
 train_data = train.loc[:,"pixel0":]
@@ -54,9 +52,10 @@ model = tf.keras.models.Sequential
 	tf.keras.layers.Dense(10,activation = 'softmax')
 ])
 
-model.compile(optimizer = "adam",
-	loss='categorical_crossentropy',
-	metrics=['accuracy'])
+model.compile(
+	optimizer = "adam",
+	loss = 'categorical_crossentropy',
+	metrics = ['accuracy'])
 
 history = model.fit(train_data,train_label,epochs = 25)
 
@@ -77,9 +76,9 @@ for i in predictions:
 
 #making a dataframe to save predictions and data values
 submission =  pd.DataFrame({
-		"ImageId": test.index+1,
-		"Label": prediction
-	})
+	"ImageId": test.index+1,
+	"Label": prediction
+})
 
 submission.to_csv('submission.csv', index=False)
 
