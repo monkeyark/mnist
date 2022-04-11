@@ -15,7 +15,7 @@ train_data = datasets.MNIST(
 	root = 'data',
 	train = True,
 	transform = ToTensor(), 
-	download = True,
+	# download = False, # set True if need download dataset
 )
 test_data = datasets.MNIST(
 	root = 'data', 
