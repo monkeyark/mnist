@@ -1,5 +1,6 @@
-Train MNIST dataset with CNN structures, then export the trained parameters.
+Train MNIST dataset with different CNN structures, then export the trained parameters.
 
+## Terminology
 W: input size
 F: filter size / kernel size
 S: stride
@@ -8,9 +9,6 @@ O: output size
 O = (W + 2P − F) / S + 1
 output size = (input size + 2 * padding - kernel size) / stride + 1
 
-(28 - 7) / 3 + 1 = 8
-
-CNN structures
 CL: convolutional layer, FL: fully connected layer
 input depth = input layer / dimension, MNIST default 1
 in_channle = input size / input width, MNIST default 28 (28x28 image size)
@@ -21,8 +19,8 @@ padding = padding
 
 As there are only 10 categories for the MNIST dataset, the last FL output neuron is 10
 
-
-CNN 1-2
+## CNN structure
+### CNN 1-2
 1 CL, 2 FL
 For CL, there are 4 filters, with filter size 7, stride 3
 Activation function
@@ -38,7 +36,7 @@ For FL2, output neuron is 10
 | linear | 8^2*4=256   | 64          |            |              |        |         |                         |
 | linear | 64          | 10          |            |              |        |         |                         |
 
-CNN 2-1
+### CNN 2-1
 2 CL, 1 FL
 For CL1, 16 filters, each with filter size 7 and stride 2
 Activation function
@@ -54,7 +52,7 @@ For FL, output neuron is 10
 |        | in_feature  | out_feature |            |              |        |         |                          |
 | linear | 4^2*4=64    | 10          |            |              |        |         |                          |
 
-CNN 3-2
+### CNN 3-2
 3 CL, 2 FL
 For CL1, 16 filters, filter size 3 and stride 2
 Activation function
@@ -76,7 +74,7 @@ For FL2, output neuron 10
 | linear | 64          | 10          |            |              |        |         |                          |
 
 
-CNN 4-2
+### CNN 4-2
 4 CL, 2 FL
 CL1, 16 filters, filter size 5, stride 2
 Activation function
