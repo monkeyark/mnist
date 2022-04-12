@@ -110,7 +110,7 @@ class CNN3_2(CNN):
 			nn.ReLU(),
 		)
 		self.full1 = nn.Sequential(
-			nn.Linear(64, 64, False),
+			nn.Linear(256, 64, False),
 			nn.ReLU(),
 		)
 		self.full2 = nn.Linear(64, 10, False)
@@ -211,7 +211,9 @@ def train(num_epochs, loaders, cnn, optimizer):
 	pass
 
 for model, opt in zip(cnn_models, optimizers):
+	print(model.__ne__)
 	train(num_epochs, loaders, model, opt)
+	print('--------------------------------------------')
 
 # for model in cnn_models:
 # 	train(num_epochs, model, loaders)

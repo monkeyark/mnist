@@ -71,7 +71,7 @@ FL2, output neuron 10
 | conv2   | 13          | 16          | 4          | 3            | 2      | 0       | floor[(13+2*0-3)/2]+1=6  |
 | conv3   | 6           | 4           | 16         | 3            | 1      | 0       | floor[(6+2*0-3)/1]+1=4   |
 |         | in_feature  | out_feature |            |              |        |         |                          |
-| linear1 | 4^2*16=64   | 64          |            |              |        |         |                          |
+| linear1 | 4^2*16=256  | 64          |            |              |        |         |                          |
 | linear2 | 64          | 10          |            |              |        |         |                          |
 
 
