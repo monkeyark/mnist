@@ -168,16 +168,19 @@ loss_func = nn.CrossEntropyLoss()
 
 # Define a Optimization Function
 from torch import optim
-optimizer = optim.Adam(cnn_models[0].parameters(), lr = 0.01)
-# for model in cnn_models:
-# 	optimizer = optim.Adam(model.parameters(), lr = 0.01)
+# optimizer = optim.Adam(cnn_models[0].parameters(), lr = 0.01)
+optimizers = []
+for model in cnn_models:
+	optimizers.append(optim.Adam(model.parameters(), lr = 0.01))
 
-# optimizer
 
 # Train the model
 from torch.autograd import Variable
+
+# Define epoch
 num_epochs = 1
-def train(num_epochs, cnn, loaders):
+
+def train(num_epochs, loaders, cnn, optimizer):
 	
 	cnn.train()
 	# Train the model
@@ -207,7 +210,8 @@ def train(num_epochs, cnn, loaders):
 		pass
 	pass
 
-train(num_epochs, cnn_models[0], loaders)
+for model, opt in zip(cnn_models, optimizers):
+	train(num_epochs, loaders, model, opt)
 
 # for model in cnn_models:
 # 	train(num_epochs, model, loaders)
@@ -227,16 +231,16 @@ def test(cnn):
 	print('Test Accuracy of the model on the 10000 test images: %.2f' % accuracy)
 pass
 
-test(cnn_models[0])
+for model in cnn_models:
+	test(model)
+	# Print 10 predictions from test data
+	sample = next(iter(loaders['test']))
+	imgs, lbls = sample
 
-# Print 10 predictions from test data
-sample = next(iter(loaders['test']))
-imgs, lbls = sample
+	actual_number = lbls[:10].numpy()
+	actual_number
 
-actual_number = lbls[:10].numpy()
-actual_number
-
-test_output, last_layer = cnn_models[0](imgs[:10])
-pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()
-print(f'Prediction number: {pred_y}')
-print(f'Actual number: {actual_number}')
+	test_output, last_layer = model(imgs[:10])
+	pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()
+	print(f'Prediction number: {pred_y}')
+	print(f'Actual number: {actual_number}')
