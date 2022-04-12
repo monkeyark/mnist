@@ -2,7 +2,6 @@ Train MNIST dataset with different CNN structures, then export the trained param
 
 ## Terminology
 W: input size
-
 F: filter size / kernel size  
 S: stride  
 P: padding size on the border  
