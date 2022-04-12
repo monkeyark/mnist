@@ -24,7 +24,10 @@ test_data = datasets.MNIST(
 
 """Preparing data for training with DataLoaders
 
-The Dataset retrieves our dataset’s features and labels one sample at a time. While training a model, we typically want to pass samples in “minibatches”, reshuffle the data at every epoch to reduce model overfitting, and use Python’s multiprocessing to speed up data retrieval.
+The Dataset retrieves our dataset’s features and labels one sample at a time.
+While training a model, we typically want to pass samples in “minibatches”,
+reshuffle the data at every epoch to reduce model overfitting,
+and use Python’s multiprocessing to speed up data retrieval.
 
 DataLoader is an iterable that abstracts this complexity for us in an easy API.
 """
@@ -87,21 +90,77 @@ class CNN2_1(CNN):
 			nn.ReLU(),
 		)
 		# fully connected layer, output 10 classes
-		self.out = nn.Linear(32 * 7 * 7, 10)
+		self.full1 = nn.Linear(64, 10, False)
 	def forward(self, x):
 		x = self.conv1(x)
 		x = self.conv2(x)
 		# flatten the output of conv2
 		x = x.view(x.size(0), -1)
-		output = self.out(x)
+		output = self.full1(x)
 		return output, x	# return x for visualization
-	pass
 
 class CNN3_2(CNN):
-	pass
+	def __init__(self):
+		super(CNN, self).__init__()
+		self.conv1 = nn.Sequential(
+			# nn.Conv2d(in_channels = 1, out_channels = 16, kernel_size = 7, stride = 2, padding = 0),
+			nn.Conv2d(1, 16, 3, 2, 0),
+			nn.ReLU(),
+		)
+		self.conv2 = nn.Sequential(
+			nn.Conv2d(16, 4, 3, 2, 0),
+			nn.ReLU(),
+		)
+		self.conv3 = nn.Sequential(
+			nn.Conv2d(4, 16, 3, 1, 0),
+			nn.ReLU(),
+		)
+		# fully connected layer, output 10 classes
+		self.full1 = nn.Linear(64, 64, False)
+		self.full2 = nn.Linear(64, 10, False)
+	def forward(self, x):
+		x = self.conv1(x)
+		x = self.conv2(x)
+		x = self.conv3(x)
+		# flatten the output of conv3
+		x = x.view(x.size(0), -1)
+		x = self.full1(x)
+		output = self.full2(x)
+		return output, x	# return x for visualization
 
 class CNN4_2(CNN):
-	pass
+	def __init__(self):
+		super(CNN, self).__init__()
+		self.conv1 = nn.Sequential(
+			# nn.Conv2d(in_channels = 1, out_channels = 16, kernel_size = 7, stride = 2, padding = 0),
+			nn.Conv2d(1, 16, 5, 2, 0),
+			nn.ReLU(),
+		)
+		self.conv2 = nn.Sequential(
+			nn.Conv2d(16, 4, 3, 1, 0),
+			nn.ReLU(),
+		)
+		self.conv3 = nn.Sequential(
+			nn.Conv2d(4, 16, 3, 2, 0),
+			nn.ReLU(),
+		)
+		self.conv4 = nn.Sequential(
+			nn.Conv2d(16, 4, 3, 1, 0),
+			nn.ReLU(),
+		)
+		# fully connected layer, output 10 classes
+		self.full1 = nn.Linear(16, 64, False)
+		self.full2 = nn.Linear(64, 10, False)
+	def forward(self, x):
+		x = self.conv1(x)
+		x = self.conv2(x)
+		x = self.conv3(x)
+		x = self.conv4(x)
+		# flatten the output of conv3
+		x = x.view(x.size(0), -1)
+		x = self.full1(x)
+		output = self.full2(x)
+		return output, x	# return x for visualization
 
 cnn_models = [CNN1_2(), CNN2_1(), CNN3_2(), CNN4_2()]
 # for model in cnn_models:
