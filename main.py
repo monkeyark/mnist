@@ -1,5 +1,3 @@
-# https://medium.com/@nutanbhogendrasharma/pytorch-convolutional-neural-network-with-mnist-dataset-4e8a4265e118
-
 from turtle import forward
 import torch
 
@@ -57,7 +55,7 @@ class CNN1_2(CNN):
 	def __init__(self):
 		super(CNN1_2, self).__init__()
 		self.conv1 = nn.Sequential(
-			nn.Conv2d(in_channels = 1, out_channels = 4, kernel_size = 4, stride = 3),
+			nn.Conv2d(in_channels = 1, out_channels = 4, kernel_size = 7, stride = 3),
 			nn.ReLU(),
 		)
 		self.full1 = nn.Sequential(
@@ -68,15 +66,12 @@ class CNN1_2(CNN):
 			nn.Linear(in_features = 64, out_features = 10, bias = False),
 			nn.ReLU(),
 		)
-		# fully connected layer, output 10 classes
-		# self.out = nn.Linear(32 * 7 * 7, 10)
 	def forward(self, x):
 		x = self.conv1(x)
-		# flatten the output of conv2
+		# flatten the output of conv1
 		x = x.view(x.size(0), -1)
 		x = self.full1(x)
-		x = self.full2(x)
-		output = self.out(x)
+		output = self.full2(x)
 		return output, x	# return x for visualization
 
 class CNN2_1(CNN):
@@ -95,7 +90,7 @@ class CNN2_1(CNN):
 	def forward(self, x):
 		x = self.conv1(x)
 		x = self.conv2(x)
-		# flatten the output of conv2 to (batch_size, 32 * 7 * 7)
+		# flatten the output of conv2
 		x = x.view(x.size(0), -1)
 		output = self.out(x)
 		return output, x	# return x for visualization
