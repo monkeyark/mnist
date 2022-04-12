@@ -55,17 +55,17 @@ class CNN1_2(CNN):
 	def __init__(self):
 		super(CNN1_2, self).__init__()
 		self.conv1 = nn.Sequential(
-			nn.Conv2d(in_channels = 1, out_channels = 4, kernel_size = 7, stride = 3),
+			# nn.Conv2d(in_channels = 1, out_channels = 4, kernel_size = 7, stride = 3, padding = 0),
+			nn.Conv2d(1, 4, 7, 3, 0),
 			nn.ReLU(),
 		)
 		self.full1 = nn.Sequential(
-			nn.Linear(in_features = 256, out_features = 64, bias = False),
+			# nn.Linear(in_features = 256, out_features = 64, bias = False),
+			nn.Linear(256, 64, False),
 			nn.ReLU(),
 		)
-		self.full2 = nn.Sequential(
-			nn.Linear(in_features = 64, out_features = 10, bias = False),
-			nn.ReLU(),
-		)
+		# self.full2 = nn.Linear(in_features = 64, out_features = 10, bias = False)
+		self.full2 = nn.Linear(64, 10, False)
 	def forward(self, x):
 		x = self.conv1(x)
 		# flatten the output of conv1
@@ -78,7 +78,8 @@ class CNN2_1(CNN):
 	def __init__(self):
 		super(CNN, self).__init__()
 		self.conv1 = nn.Sequential(
-			nn.Conv2d(in_channels = 1, out_channels = 16, kernel_size = 7, stride = 2, padding = 0),
+			# nn.Conv2d(in_channels = 1, out_channels = 16, kernel_size = 7, stride = 2, padding = 0),
+			nn.Conv2d(1, 16, 7, 2, 0),
 			nn.ReLU(),
 		)
 		self.conv2 = nn.Sequential(
@@ -94,6 +95,7 @@ class CNN2_1(CNN):
 		x = x.view(x.size(0), -1)
 		output = self.out(x)
 		return output, x	# return x for visualization
+	pass
 
 class CNN3_2(CNN):
 	pass
@@ -102,11 +104,12 @@ class CNN4_2(CNN):
 	pass
 
 cnn_models = [CNN1_2(), CNN2_1(), CNN3_2(), CNN4_2()]
-for model in cnn_models:
-	print(model)
+# for model in cnn_models:
+# 	print(model)
 
 # --------------------------------------------------------
-cnn = CNN
+# TODO use inheritance for CNN class
+# cnn = CNN
 
 # Define loss function
 loss_func = nn.CrossEntropyLoss()
@@ -114,15 +117,15 @@ loss_func
 
 # Define a Optimization Function
 from torch import optim
-# optimizer = optim.Adam(cnn.parameters(), lr = 0.01)
-for model in cnn_models:
-	optimizer = optim.Adam(model.parameters(), lr = 0.01)
+optimizer = optim.Adam(cnn_models[0].parameters(), lr = 0.01)
+# for model in cnn_models:
+# 	optimizer = optim.Adam(model.parameters(), lr = 0.01)
 
-optimizer
+# optimizer
 
 # Train the model
 from torch.autograd import Variable
-num_epochs = 10
+num_epochs = 1
 def train(num_epochs, cnn, loaders):
 	
 	cnn.train()
@@ -153,13 +156,13 @@ def train(num_epochs, cnn, loaders):
 		pass
 	pass
 
-train(num_epochs, CNN, loaders)
+train(num_epochs, cnn_models[0], loaders)
 
 # for model in cnn_models:
 # 	train(num_epochs, model, loaders)
 
 # Evaluate the model on test data
-def test():
+def test(cnn):
 	# Test the model
 	cnn.eval()
 	with torch.no_grad():
@@ -173,7 +176,7 @@ def test():
 	print('Test Accuracy of the model on the 10000 test images: %.2f' % accuracy)
 pass
 
-test()
+test(cnn_models[0])
 
 # Print 10 predictions from test data
 sample = next(iter(loaders['test']))
@@ -182,7 +185,7 @@ imgs, lbls = sample
 actual_number = lbls[:10].numpy()
 actual_number
 
-test_output, last_layer = cnn(imgs[:10])
+test_output, last_layer = cnn_models[0](imgs[:10])
 pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()
 print(f'Prediction number: {pred_y}')
 print(f'Actual number: {actual_number}')
