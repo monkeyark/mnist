@@ -1,8 +1,6 @@
-# from turtle import forward
 import torch
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-device
 
 """**Save the files into dataframes**"""
 
@@ -13,7 +11,7 @@ train_data = datasets.MNIST(
 	root = 'data',
 	train = True,
 	transform = ToTensor(),
-	# download = False, # set True if need download dataset
+	download = True, # set True if need download dataset
 )
 test_data = datasets.MNIST(
 	root = 'data',
@@ -21,16 +19,7 @@ test_data = datasets.MNIST(
 	transform = ToTensor()
 )
 
-"""Preparing data for training with DataLoaders
-
-The Dataset retrieves our dataset’s features and labels one sample at a time.
-While training a model, we typically want to pass samples in “minibatches”,
-reshuffle the data at every epoch to reduce model overfitting,
-and use Python’s multiprocessing to speed up data retrieval.
-
-DataLoader is an iterable that abstracts this complexity for us in an easy API.
-"""
-
+# Preparing data for training with DataLoaders
 from torch.utils.data import DataLoader
 loaders = {
 	'train' : DataLoader(
@@ -47,12 +36,8 @@ loaders = {
 }
 
 # --------------------------------------------------------
+# Define CNN models
 import torch.nn as nn
-class CNN(nn.Module):
-	def forward(self, x):
-		pass
-	pass
-
 class CNN1_2(nn.Module):
 	def __init__(self):
 		super(CNN1_2, self).__init__()
@@ -61,19 +46,19 @@ class CNN1_2(nn.Module):
 			nn.Conv2d(1, 4, 7, 3, 0),
 			nn.ReLU(),
 		)
-		self.full1 = nn.Sequential(
+		self.fc1 = nn.Sequential(
 			# in_features = 256, out_features = 64, bias = False
 			nn.Linear(256, 64, False),
 			nn.ReLU(),
 		)
-		self.full2 = nn.Sequential(
+		self.fc2 = nn.Sequential(
 			nn.Linear(64, 10, False)
 		)
 	def forward(self, x):
 		x = self.conv1(x)
 		x = x.view(x.size(0), -1)	# flatten the output of conv
-		x = self.full1(x)
-		output = self.full2(x)
+		x = self.fc1(x)
+		output = self.fc2(x)
 		return output, x	# return x for visualization
 
 class CNN2_1(nn.Module):
@@ -87,14 +72,14 @@ class CNN2_1(nn.Module):
 			nn.Conv2d(16, 4, 5, 2, 0),
 			nn.ReLU(),
 		)
-		self.full1 = nn.Sequential(
+		self.fc1 = nn.Sequential(
 			nn.Linear(64, 10, False)
 		)
 	def forward(self, x):
 		x = self.conv1(x)
 		x = self.conv2(x)
 		x = x.view(x.size(0), -1)
-		output = self.full1(x)
+		output = self.fc1(x)
 		return output, x
 
 class CNN3_2(nn.Module):
@@ -112,11 +97,11 @@ class CNN3_2(nn.Module):
 			nn.Conv2d(4, 16, 3, 1, 0),
 			nn.ReLU(),
 		)
-		self.full1 = nn.Sequential(
+		self.fc1 = nn.Sequential(
 			nn.Linear(256, 64, False),
 			nn.ReLU(),
 		)
-		self.full2 = nn.Sequential(
+		self.fc2 = nn.Sequential(
 			nn.Linear(64, 10, False)
 		)
 	def forward(self, x):
@@ -124,13 +109,14 @@ class CNN3_2(nn.Module):
 		x = self.conv2(x)
 		x = self.conv3(x)
 		x = x.view(x.size(0), -1)
-		x = self.full1(x)
-		output = self.full2(x)
+		x = self.fc1(x)
+		output = self.fc2(x)
 		return output, x
 
 class CNN4_2(nn.Module):
 	def __init__(self):
 		super(CNN4_2, self).__init__()
+		layer = ['conv1', 'conv2', 'conv3', 'conv4', 'fc1', 'fc2']
 		self.conv1 = nn.Sequential(
 			nn.Conv2d(1, 16, 5, 2, 0),
 			nn.ReLU(),
@@ -147,11 +133,11 @@ class CNN4_2(nn.Module):
 			nn.Conv2d(16, 4, 3, 1, 0),
 			nn.ReLU(),
 		)
-		self.full1 = nn.Sequential(
+		self.fc1 = nn.Sequential(
 			nn.Linear(16, 64, False),
 			nn.ReLU(),
 		)
-		self.full2 = nn.Sequential(
+		self.fc2 = nn.Sequential(
 			nn.Linear(64, 10, False)
 		)
 	def forward(self, x):
@@ -160,22 +146,19 @@ class CNN4_2(nn.Module):
 		x = self.conv3(x)
 		x = self.conv4(x)
 		x = x.view(x.size(0), -1)
-		x = self.full1(x)
-		output = self.full2(x)
+		x = self.fc1(x)
+		output = self.fc2(x)
 		return output, x
 
 cnn_models = [CNN1_2(), CNN2_1(), CNN3_2(), CNN4_2()]
 
 # --------------------------------------------------------
-# TODO use inheritance for CNN class
-# cnn = CNN
 
 # Define loss function
 loss_func = nn.CrossEntropyLoss()
 
 # Define a Optimization Function
 from torch import optim
-# optimizer = optim.Adam(cnn_models[0].parameters(), lr = 0.01)
 optimizers = []
 for model in cnn_models:
 	optimizers.append(optim.Adam(model.parameters(), lr = 0.01))
@@ -183,9 +166,6 @@ for model in cnn_models:
 
 # Train the model
 from torch.autograd import Variable
-
-# Define epoch
-num_epochs = 1
 
 def train(num_epochs, loaders, cnn, optimizer):
 	cnn.train()
@@ -218,38 +198,85 @@ def train(num_epochs, loaders, cnn, optimizer):
 
 for model, opt in zip(cnn_models, optimizers):
 	print(model.__ne__)
-	trained = train(num_epochs, loaders, model, opt)
-	# print(model.conv1[0].weight)	#TODO
-	print('--------------------------------------------')
+	num_epochs = 1	# Define epoch
+	train(num_epochs, loaders, model, opt)
 
-for model in cnn_models:
-	print(model.conv1[0].weight)
+# # Evaluate the model on test data
+# def test(cnn):
+# 	# Test the model
+# 	cnn.eval()
+# 	with torch.no_grad():
+# 		correct = 0
+# 		total = 0
+# 		for images, labels in loaders['test']:
+# 			test_output, last_layer = cnn(images)
+# 			pred_y = torch.max(test_output, 1)[1].data.squeeze()
+# 			accuracy = (pred_y == labels).sum().item() / float(labels.size(0))
+# 			pass
+# 	print('Test Accuracy of the model on the 10000 test images: %.2f' % accuracy)
+# pass
 
-# Evaluate the model on test data
-def test(cnn):
-	# Test the model
-	cnn.eval()
-	with torch.no_grad():
-		correct = 0
-		total = 0
-		for images, labels in loaders['test']:
-			test_output, last_layer = cnn(images)
-			pred_y = torch.max(test_output, 1)[1].data.squeeze()
-			accuracy = (pred_y == labels).sum().item() / float(labels.size(0))
-			pass
-	print('Test Accuracy of the model on the 10000 test images: %.2f' % accuracy)
-pass
+# for model in cnn_models:
+# 	test(model)
+# 	# Print 10 predictions from test data
+# 	sample = next(iter(loaders['test']))
+# 	imgs, lbls = sample
 
-for model in cnn_models:
-	test(model)
-	# Print 10 predictions from test data
-	sample = next(iter(loaders['test']))
-	imgs, lbls = sample
+# 	actual_number = lbls[:10].numpy()
 
-	actual_number = lbls[:10].numpy()
-	actual_number
+# 	test_output, last_layer = model(imgs[:10])
+# 	pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()
+# 	print(f'Prediction number: {pred_y}')
+# 	print(f'Actual number: {actual_number}')
 
-	test_output, last_layer = model(imgs[:10])
-	pred_y = torch.max(test_output, 1)[1].data.numpy().squeeze()
-	print(f'Prediction number: {pred_y}')
-	print(f'Actual number: {actual_number}')
+
+# TODO output weight of all layers of every CNN model
+# for model in cnn_models:
+# 	print(model.conv1[0].weight)
+
+print('--------------------------------------------')
+# CNN1_2
+model = cnn_models[0]
+print(model.__ne__, 'conv1')
+print(model.conv1[0].weight)
+print(model.__ne__, 'fc1')
+print(model.fc1[0].weight)	# TODO weight NOT fully output by default
+print(model.__ne__, 'fc2')
+print(model.fc2[0].weight)
+print('--------------------------------------------')
+# CNN2_1
+model = cnn_models[1]
+print(model.__ne__, 'conv1')
+print(model.conv1[0].weight)
+print(model.__ne__, 'conv2')
+print(model.conv2[0].weight)
+print(model.__ne__, 'fc1')
+print(model.fc1[0].weight)
+print('--------------------------------------------')
+# CNN3_2
+model = cnn_models[2]
+print(model.__ne__, 'conv1')
+print(model.conv1[0].weight)
+print(model.__ne__, 'conv2')
+print(model.conv2[0].weight)
+print(model.__ne__, 'conv3')
+print(model.conv3[0].weight)
+print(model.__ne__, 'fc1')
+print(model.fc1[0].weight)
+print(model.__ne__, 'fc2')
+print(model.fc2[0].weight)
+print('--------------------------------------------')
+# CNN4_2
+model = cnn_models[3]
+print(model.__ne__, 'conv1')
+print(model.conv1[0].weight)
+print(model.__ne__, 'conv2')
+print(model.conv2[0].weight)
+print(model.__ne__, 'conv3')
+print(model.conv3[0].weight)
+print(model.__ne__, 'conv4')
+print(model.conv4[0].weight)
+print(model.__ne__, 'fc1')
+print(model.fc1[0].weight)
+print(model.__ne__, 'fc2')
+print(model.fc2[0].weight)
