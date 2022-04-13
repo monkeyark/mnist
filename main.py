@@ -1,6 +1,5 @@
-from turtle import forward
+# from turtle import forward
 import torch
-
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device
@@ -13,12 +12,12 @@ from torchvision.transforms import ToTensor
 train_data = datasets.MNIST(
 	root = 'data',
 	train = True,
-	transform = ToTensor(), 
+	transform = ToTensor(),
 	# download = False, # set True if need download dataset
 )
 test_data = datasets.MNIST(
-	root = 'data', 
-	train = False, 
+	root = 'data',
+	train = False,
 	transform = ToTensor()
 )
 
@@ -54,7 +53,7 @@ class CNN(nn.Module):
 		pass
 	pass
 
-class CNN1_2(CNN):
+class CNN1_2(nn.Module):
 	def __init__(self):
 		super(CNN1_2, self).__init__()
 		self.conv1 = nn.Sequential(
@@ -67,7 +66,9 @@ class CNN1_2(CNN):
 			nn.Linear(256, 64, False),
 			nn.ReLU(),
 		)
-		self.full2 = nn.Linear(64, 10, False)
+		self.full2 = nn.Sequential(
+			nn.Linear(64, 10, False)
+		)
 	def forward(self, x):
 		x = self.conv1(x)
 		x = x.view(x.size(0), -1)	# flatten the output of conv
@@ -75,9 +76,9 @@ class CNN1_2(CNN):
 		output = self.full2(x)
 		return output, x	# return x for visualization
 
-class CNN2_1(CNN):
+class CNN2_1(nn.Module):
 	def __init__(self):
-		super(CNN, self).__init__()
+		super(CNN2_1, self).__init__()
 		self.conv1 = nn.Sequential(
 			nn.Conv2d(1, 16, 7, 2, 0),
 			nn.ReLU(),
@@ -86,7 +87,9 @@ class CNN2_1(CNN):
 			nn.Conv2d(16, 4, 5, 2, 0),
 			nn.ReLU(),
 		)
-		self.full1 = nn.Linear(64, 10, False)
+		self.full1 = nn.Sequential(
+			nn.Linear(64, 10, False)
+		)
 	def forward(self, x):
 		x = self.conv1(x)
 		x = self.conv2(x)
@@ -94,9 +97,9 @@ class CNN2_1(CNN):
 		output = self.full1(x)
 		return output, x
 
-class CNN3_2(CNN):
+class CNN3_2(nn.Module):
 	def __init__(self):
-		super(CNN, self).__init__()
+		super(CNN3_2, self).__init__()
 		self.conv1 = nn.Sequential(
 			nn.Conv2d(1, 16, 3, 2, 0),
 			nn.ReLU(),
@@ -113,7 +116,9 @@ class CNN3_2(CNN):
 			nn.Linear(256, 64, False),
 			nn.ReLU(),
 		)
-		self.full2 = nn.Linear(64, 10, False)
+		self.full2 = nn.Sequential(
+			nn.Linear(64, 10, False)
+		)
 	def forward(self, x):
 		x = self.conv1(x)
 		x = self.conv2(x)
@@ -123,9 +128,9 @@ class CNN3_2(CNN):
 		output = self.full2(x)
 		return output, x
 
-class CNN4_2(CNN):
+class CNN4_2(nn.Module):
 	def __init__(self):
-		super(CNN, self).__init__()
+		super(CNN4_2, self).__init__()
 		self.conv1 = nn.Sequential(
 			nn.Conv2d(1, 16, 5, 2, 0),
 			nn.ReLU(),
@@ -146,7 +151,9 @@ class CNN4_2(CNN):
 			nn.Linear(16, 64, False),
 			nn.ReLU(),
 		)
-		self.full2 = nn.Linear(64, 10, False)
+		self.full2 = nn.Sequential(
+			nn.Linear(64, 10, False)
+		)
 	def forward(self, x):
 		x = self.conv1(x)
 		x = self.conv2(x)
@@ -181,7 +188,6 @@ from torch.autograd import Variable
 num_epochs = 1
 
 def train(num_epochs, loaders, cnn, optimizer):
-	
 	cnn.train()
 	# Train the model
 	total_step = len(loaders['train'])
@@ -212,11 +218,12 @@ def train(num_epochs, loaders, cnn, optimizer):
 
 for model, opt in zip(cnn_models, optimizers):
 	print(model.__ne__)
-	train(num_epochs, loaders, model, opt)
+	trained = train(num_epochs, loaders, model, opt)
+	# print(model.conv1[0].weight)	#TODO
 	print('--------------------------------------------')
 
-# for model in cnn_models:
-# 	train(num_epochs, model, loaders)
+for model in cnn_models:
+	print(model.conv1[0].weight)
 
 # Evaluate the model on test data
 def test(cnn):
