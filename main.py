@@ -2,8 +2,6 @@ import torch
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-"""**Save the files into dataframes**"""
-
 # Importing dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
@@ -196,10 +194,10 @@ def train(num_epochs, loaders, cnn, optimizer):
 		pass
 	pass
 
-for model, opt in zip(cnn_models, optimizers):
-	print(model.__ne__)
-	num_epochs = 1	# Define epoch
-	train(num_epochs, loaders, model, opt)
+# for model, opt in zip(cnn_models, optimizers):
+# 	print(model.__ne__)
+# 	num_epochs = 1	# Define epoch
+# 	train(num_epochs, loaders, model, opt)
 
 # # Evaluate the model on test data
 # def test(cnn):
@@ -234,49 +232,70 @@ for model, opt in zip(cnn_models, optimizers):
 # for model in cnn_models:
 # 	print(model.conv1[0].weight)
 
+# print('--------------------------------------------')
+# # CNN1_2
+# model = cnn_models[0]
+# print(model.__ne__, 'conv1')
+# print(model.conv1[0].weight)
+# print(model.__ne__, 'fc1')
+# print(model.fc1[0].weight)	# TODO weight NOT fully output by default
+# print(model.__ne__, 'fc2')
+# print(model.fc2[0].weight)
+# print('--------------------------------------------')
+# # CNN2_1
+# model = cnn_models[1]
+# print(model.__ne__, 'conv1')
+# print(model.conv1[0].weight)
+# print(model.__ne__, 'conv2')
+# print(model.conv2[0].weight)
+# print(model.__ne__, 'fc1')
+# print(model.fc1[0].weight)
+# print('--------------------------------------------')
+# # CNN3_2
+# model = cnn_models[2]
+# print(model.__ne__, 'conv1')
+# print(model.conv1[0].weight)
+# print(model.__ne__, 'conv2')
+# print(model.conv2[0].weight)
+# print(model.__ne__, 'conv3')
+# print(model.conv3[0].weight)
+# print(model.__ne__, 'fc1')
+# print(model.fc1[0].weight)
+# print(model.__ne__, 'fc2')
+# print(model.fc2[0].weight)
+# print('--------------------------------------------')
+# # CNN4_2
+# model = cnn_models[3]
+# print(model.__ne__, 'conv1')
+# print(model.conv1[0].weight)
+# print(model.__ne__, 'conv2')
+# print(model.conv2[0].weight)
+# print(model.__ne__, 'conv3')
+# print(model.conv3[0].weight)
+# print(model.__ne__, 'conv4')
+# print(model.conv4[0].weight)
+# print(model.__ne__, 'fc1')
+# print(model.fc1[0].weight)
+# print(model.__ne__, 'fc2')
+# print(model.fc2[0].weight)
+
+train(1, loaders, cnn_models[0], optimizers[0])
 print('--------------------------------------------')
 # CNN1_2
 model = cnn_models[0]
 print(model.__ne__, 'conv1')
 print(model.conv1[0].weight)
+print('The type of weight is: ', type(model.conv1[0].weight))
+# f = open("demofile3.txt", "w")
+# weight_str = "" + model.conv1[0].weight
+# f.write(weight_str)
+# f.close()
+print('===================================')
+torch.save(model.conv1[0].weight, 'weight.txt')
+with open('weight.txt', 'r') as f:
+	print(f.read())
+print('===================================')
 print(model.__ne__, 'fc1')
 print(model.fc1[0].weight)	# TODO weight NOT fully output by default
-print(model.__ne__, 'fc2')
-print(model.fc2[0].weight)
-print('--------------------------------------------')
-# CNN2_1
-model = cnn_models[1]
-print(model.__ne__, 'conv1')
-print(model.conv1[0].weight)
-print(model.__ne__, 'conv2')
-print(model.conv2[0].weight)
-print(model.__ne__, 'fc1')
-print(model.fc1[0].weight)
-print('--------------------------------------------')
-# CNN3_2
-model = cnn_models[2]
-print(model.__ne__, 'conv1')
-print(model.conv1[0].weight)
-print(model.__ne__, 'conv2')
-print(model.conv2[0].weight)
-print(model.__ne__, 'conv3')
-print(model.conv3[0].weight)
-print(model.__ne__, 'fc1')
-print(model.fc1[0].weight)
-print(model.__ne__, 'fc2')
-print(model.fc2[0].weight)
-print('--------------------------------------------')
-# CNN4_2
-model = cnn_models[3]
-print(model.__ne__, 'conv1')
-print(model.conv1[0].weight)
-print(model.__ne__, 'conv2')
-print(model.conv2[0].weight)
-print(model.__ne__, 'conv3')
-print(model.conv3[0].weight)
-print(model.__ne__, 'conv4')
-print(model.conv4[0].weight)
-print(model.__ne__, 'fc1')
-print(model.fc1[0].weight)
 print(model.__ne__, 'fc2')
 print(model.fc2[0].weight)
