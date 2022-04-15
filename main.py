@@ -238,7 +238,7 @@ def train(num_epochs, loaders, cnn, optimizer):
 # print(model.__ne__, 'conv1')
 # print(model.conv1[0].weight)
 # print(model.__ne__, 'fc1')
-# print(model.fc1[0].weight)	# TODO weight NOT fully output by default
+# print(model.fc1[0].weight)
 # print(model.__ne__, 'fc2')
 # print(model.fc2[0].weight)
 # print('--------------------------------------------')
@@ -279,24 +279,33 @@ def train(num_epochs, loaders, cnn, optimizer):
 # print(model.__ne__, 'fc2')
 # print(model.fc2[0].weight)
 
-train(1, loaders, cnn_models[0], optimizers[0])
 print('--------------------------------------------')
+train(1, loaders, cnn_models[0], optimizers[0])
 # CNN1_2
 model = cnn_models[0]
 # print(model.__ne__, 'conv1')
-# print(model.conv1[0].weight)
 torch.set_printoptions(edgeitems=256)
-tensor = model.fc1[0].weight.data
-# print(tensor)
+tensor_conv1 = model.conv1[0].weight.data
+tensor_fc1 = model.fc1[0].weight.data
+tensor_fc2 = model.fc2[0].weight.data
 
 import numpy as np
 np.set_printoptions(edgeitems=256, linewidth=1000000)
-numpytensor = tensor.detach().numpy()
-# numpytensor = tensor.detach().numpy()
-arr = np.array2string(numpytensor, max_line_width=100,separator=',')
-print(arr)
-print('--------------------------------------------')
+np_conv1 = tensor_conv1.detach().numpy()
+np_fc1 = tensor_fc1.detach().numpy()
+np_fc2 = tensor_fc2.detach().numpy()
 
-f = open("demofile3.txt", "w")
+arr_conv1 = np.array2string(np_conv1, max_line_width=100,separator=',')
+print(arr_conv1)
+print('------------------------------------------------------------------------------------------------------------------------------------^^^' + 'arr_conv1')
+arr_fc1 = np.array2string(np_fc1, max_line_width=100,separator=',')
+print(arr_fc1)
+print('------------------------------------------------------------------------------------------------------------------------------------^^^' + 'arr_fc1')
+arr_fc2 = np.array2string(np_fc2, max_line_width=100,separator=',')
+print(arr_fc2)
+print('------------------------------------------------------------------------------------------------------------------------------------^^^' + 'arr_fc2')
+
+arr = arr_conv1 + arr_fc1 + arr_fc2
+f = open("filter.txt", "w")
 f.write(arr)
 f.close()
