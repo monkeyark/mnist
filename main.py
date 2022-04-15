@@ -285,11 +285,12 @@ print('--------------------------------------------')
 model = cnn_models[0]
 print(model.__ne__, 'conv1')
 print(model.conv1[0].weight)
-print('The type of weight is: ', type(model.conv1[0].weight))
-# f = open("demofile3.txt", "w")
-# weight_str = "" + model.conv1[0].weight
-# f.write(weight_str)
-# f.close()
+
+tensor = model.conv1[0].weight.data
+print(tensor)
+print(model.conv1[0].weight.detach().numpy())
+print(tensor.detach().numpy())
+
 print('===================================')
 torch.save(model.conv1[0].weight, 'weight.txt')
 with open('weight.txt', 'r') as f:
