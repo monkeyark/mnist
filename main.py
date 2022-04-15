@@ -283,20 +283,20 @@ train(1, loaders, cnn_models[0], optimizers[0])
 print('--------------------------------------------')
 # CNN1_2
 model = cnn_models[0]
-print(model.__ne__, 'conv1')
-print(model.conv1[0].weight)
+# print(model.__ne__, 'conv1')
+# print(model.conv1[0].weight)
+torch.set_printoptions(edgeitems=256)
+tensor = model.fc1[0].weight.data
+# print(tensor)
 
-tensor = model.conv1[0].weight.data
-print(tensor)
-print(model.conv1[0].weight.detach().numpy())
-print(tensor.detach().numpy())
+import numpy as np
+np.set_printoptions(edgeitems=256, linewidth=1000000)
+numpytensor = tensor.detach().numpy()
+# numpytensor = tensor.detach().numpy()
+arr = np.array2string(numpytensor, max_line_width=100,separator=',')
+print(arr)
+print('--------------------------------------------')
 
-print('===================================')
-torch.save(model.conv1[0].weight, 'weight.txt')
-with open('weight.txt', 'r') as f:
-	print(f.read())
-print('===================================')
-print(model.__ne__, 'fc1')
-print(model.fc1[0].weight)	# TODO weight NOT fully output by default
-print(model.__ne__, 'fc2')
-print(model.fc2[0].weight)
+f = open("demofile3.txt", "w")
+f.write(arr)
+f.close()
