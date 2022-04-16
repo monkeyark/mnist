@@ -14,7 +14,7 @@ train_data = datasets.MNIST(
 test_data = datasets.MNIST(
 	root = 'data',
 	train = False,
-	transform = ToTensor()
+	transform = ToTensor(),	
 )
 
 # Preparing data for training with DataLoaders
@@ -24,13 +24,13 @@ loaders = {
 		train_data,
 		batch_size = 100,
 		shuffle = True,
-		num_workers = 1),
+		num_workers = 0),
 
 	'test'  : DataLoader(
 		test_data,
 		batch_size = 100,
 		shuffle = True,
-		num_workers = 1),
+		num_workers = 0),
 }
 
 # --------------------------------------------------------
@@ -284,7 +284,7 @@ train(1, loaders, cnn_models[0], optimizers[0])
 # CNN1_2
 model = cnn_models[0]
 # print(model.__ne__, 'conv1')
-torch.set_printoptions(edgeitems=256)
+torch.set_printoptions(edgeitems=256, linewidth=1000000)
 tensor_conv1 = model.conv1[0].weight.data
 tensor_fc1 = model.fc1[0].weight.data
 tensor_fc2 = model.fc2[0].weight.data
