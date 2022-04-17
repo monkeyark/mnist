@@ -228,8 +228,8 @@ for model, opt in zip(cnn_models, optimizers):
 	train(num_epochs, loaders, model, opt)
 
 
-# --------------------------------------------------------
-# Evaluate the model on test data
+# # --------------------------------------------------------
+# # Evaluate the model on test data
 
 # def test(cnn):
 # 	# Test the model
@@ -258,8 +258,8 @@ for model, opt in zip(cnn_models, optimizers):
 # 	print(f'Prediction number: {pred_y}')
 # 	print(f'Actual number: {actual_number}')
 
-# --------------------------------------------------------
-# Extrac trained weight of models
+# # --------------------------------------------------------
+# # Extrac trained weight of models
 
 # train(1, loaders, cnn_models[0], optimizers[0])
 # model = cnn_models[0]
@@ -268,20 +268,18 @@ for model, opt in zip(cnn_models, optimizers):
 
 import numpy as np
 np.set_printoptions(edgeitems=256, linewidth=1000000)
-# torch.set_printoptions(edgeitems=256, linewidth=1000000)
+torch.set_printoptions(edgeitems=256, linewidth=1000000)
 
 weightData = ""
 for model in cnn_models:
-	print(model.__ne__)
+	weightData += model.__class__.__name__ + "\n"
 	for layer in model.layer():
+		# weightData += layer
 		tensor = layer.weight.data
-		# print(tensor)
-		print(tensor.detach().numpy())
-		weight = np.array2string(tensor.detach().numpy())
-		weightData = weightData + weight + "\n\n\n\n"
-		# print(weight)
-	print('--------------------------------------------')
-
+		tensor_np = tensor.numpy()
+		print(layer)
+		print(tensor_np)
+		weightData = weightData + np.array2string(tensor_np) + "\n\n\n\n"
 
 # f = open("trained_weight.txt", "w")
 # f.write(weightData)
