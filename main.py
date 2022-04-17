@@ -2,6 +2,7 @@ import torch
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+# --------------------------------------------------------
 # Importing dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
@@ -58,6 +59,12 @@ class CNN1_2(nn.Module):
 		x = self.fc1(x)
 		output = self.fc2(x)
 		return output, x	# return x for visualization
+	def layer(self):
+		layer = []
+		layer.append(self.conv1[0])
+		layer.append(self.fc1[0])
+		layer.append(self.fc2[0])
+		return layer
 
 class CNN2_1(nn.Module):
 	def __init__(self):
@@ -79,6 +86,12 @@ class CNN2_1(nn.Module):
 		x = x.view(x.size(0), -1)
 		output = self.fc1(x)
 		return output, x
+	def layer(self):
+		layer = []
+		layer.append(self.conv1[0])
+		layer.append(self.conv2[0])
+		layer.append(self.fc1[0])
+		return layer
 
 class CNN3_2(nn.Module):
 	def __init__(self):
@@ -110,6 +123,14 @@ class CNN3_2(nn.Module):
 		x = self.fc1(x)
 		output = self.fc2(x)
 		return output, x
+	def layer(self):
+		layer = []
+		layer.append(self.conv1[0])
+		layer.append(self.conv2[0])
+		layer.append(self.conv3[0])
+		layer.append(self.fc1[0])
+		layer.append(self.fc2[0])
+		return layer
 
 class CNN4_2(nn.Module):
 	def __init__(self):
@@ -147,11 +168,19 @@ class CNN4_2(nn.Module):
 		x = self.fc1(x)
 		output = self.fc2(x)
 		return output, x
+	def layer(self):
+		layer = []
+		layer.append(self.conv1[0])
+		layer.append(self.conv2[0])
+		layer.append(self.conv3[0])
+		layer.append(self.conv4[0])
+		layer.append(self.fc1[0])
+		layer.append(self.fc2[0])
+		return layer
 
 cnn_models = [CNN1_2(), CNN2_1(), CNN3_2(), CNN4_2()]
 
 # --------------------------------------------------------
-
 # Define loss function
 loss_func = nn.CrossEntropyLoss()
 
@@ -161,15 +190,13 @@ optimizers = []
 for model in cnn_models:
 	optimizers.append(optim.Adam(model.parameters(), lr = 0.01))
 
-
+# --------------------------------------------------------
 # Train the model
 from torch.autograd import Variable
 
 def train(num_epochs, loaders, cnn, optimizer):
 	cnn.train()
-	# Train the model
 	total_step = len(loaders['train'])
-		
 	for epoch in range(num_epochs):
 		for i, (images, labels) in enumerate(loaders['train']):
 			
@@ -194,12 +221,16 @@ def train(num_epochs, loaders, cnn, optimizer):
 		pass
 	pass
 
-# for model, opt in zip(cnn_models, optimizers):
-# 	print(model.__ne__)
-# 	num_epochs = 1	# Define epoch
-# 	train(num_epochs, loaders, model, opt)
+# Model training
+for model, opt in zip(cnn_models, optimizers):
+	print(model.__ne__)
+	num_epochs = 1	# Define epoch
+	train(num_epochs, loaders, model, opt)
 
-# # Evaluate the model on test data
+
+# --------------------------------------------------------
+# Evaluate the model on test data
+
 # def test(cnn):
 # 	# Test the model
 # 	cnn.eval()
@@ -227,85 +258,31 @@ def train(num_epochs, loaders, cnn, optimizer):
 # 	print(f'Prediction number: {pred_y}')
 # 	print(f'Actual number: {actual_number}')
 
+# --------------------------------------------------------
+# Extrac trained weight of models
 
-# TODO output weight of all layers of every CNN model
-# for model in cnn_models:
-# 	print(model.conv1[0].weight)
-
-# print('--------------------------------------------')
-# # CNN1_2
+# train(1, loaders, cnn_models[0], optimizers[0])
 # model = cnn_models[0]
-# print(model.__ne__, 'conv1')
-# print(model.conv1[0].weight)
-# print(model.__ne__, 'fc1')
-# print(model.fc1[0].weight)
-# print(model.__ne__, 'fc2')
-# print(model.fc2[0].weight)
-# print('--------------------------------------------')
-# # CNN2_1
-# model = cnn_models[1]
-# print(model.__ne__, 'conv1')
-# print(model.conv1[0].weight)
-# print(model.__ne__, 'conv2')
-# print(model.conv2[0].weight)
-# print(model.__ne__, 'fc1')
-# print(model.fc1[0].weight)
-# print('--------------------------------------------')
-# # CNN3_2
-# model = cnn_models[2]
-# print(model.__ne__, 'conv1')
-# print(model.conv1[0].weight)
-# print(model.__ne__, 'conv2')
-# print(model.conv2[0].weight)
-# print(model.__ne__, 'conv3')
-# print(model.conv3[0].weight)
-# print(model.__ne__, 'fc1')
-# print(model.fc1[0].weight)
-# print(model.__ne__, 'fc2')
-# print(model.fc2[0].weight)
-# print('--------------------------------------------')
-# # CNN4_2
-# model = cnn_models[3]
-# print(model.__ne__, 'conv1')
-# print(model.conv1[0].weight)
-# print(model.__ne__, 'conv2')
-# print(model.conv2[0].weight)
-# print(model.__ne__, 'conv3')
-# print(model.conv3[0].weight)
-# print(model.__ne__, 'conv4')
-# print(model.conv4[0].weight)
-# print(model.__ne__, 'fc1')
-# print(model.fc1[0].weight)
-# print(model.__ne__, 'fc2')
-# print(model.fc2[0].weight)
 
-print('--------------------------------------------')
-train(1, loaders, cnn_models[0], optimizers[0])
-# CNN1_2
-model = cnn_models[0]
-# print(model.__ne__, 'conv1')
-torch.set_printoptions(edgeitems=256, linewidth=1000000)
-tensor_conv1 = model.conv1[0].weight.data
-tensor_fc1 = model.fc1[0].weight.data
-tensor_fc2 = model.fc2[0].weight.data
+
 
 import numpy as np
 np.set_printoptions(edgeitems=256, linewidth=1000000)
-np_conv1 = tensor_conv1.detach().numpy()
-np_fc1 = tensor_fc1.detach().numpy()
-np_fc2 = tensor_fc2.detach().numpy()
+# torch.set_printoptions(edgeitems=256, linewidth=1000000)
 
-arr_conv1 = np.array2string(np_conv1, max_line_width=100,separator=',')
-print(arr_conv1)
-print('------------------------------------------------------------------------------------------------------------------------------------^^^' + 'arr_conv1')
-arr_fc1 = np.array2string(np_fc1, max_line_width=100,separator=',')
-print(arr_fc1)
-print('------------------------------------------------------------------------------------------------------------------------------------^^^' + 'arr_fc1')
-arr_fc2 = np.array2string(np_fc2, max_line_width=100,separator=',')
-print(arr_fc2)
-print('------------------------------------------------------------------------------------------------------------------------------------^^^' + 'arr_fc2')
+weightData = ""
+for model in cnn_models:
+	print(model.__ne__)
+	for layer in model.layer():
+		tensor = layer.weight.data
+		# print(tensor)
+		print(tensor.detach().numpy())
+		weight = np.array2string(tensor.detach().numpy())
+		weightData = weightData + weight + "\n\n\n\n"
+		# print(weight)
+	print('--------------------------------------------')
 
-arr = arr_conv1 + arr_fc1 + arr_fc2
-f = open("filter.txt", "w")
-f.write(arr)
-f.close()
+
+# f = open("trained_weight.txt", "w")
+# f.write(weightData)
+# f.close()
