@@ -1,5 +1,10 @@
 ### Output File ###
 *.txt
+parse
+
+### Makefile ###
+TAGS
+main
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

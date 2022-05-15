@@ -7,7 +7,7 @@ CFLAGS = -Wall -Werror -ggdb3 -funroll-loops
 CXXFLAGS = -std=c++20 -Wall -Werror -ggdb3 -funroll-loops
 TEXFLAGS = -shell-escape -interaction=nonstopmode -file-line-error --interaction=batchmode
 
-BIN = parse
+BIN = main
 OBJS = parse.o
 
 all: $(BIN) etags
