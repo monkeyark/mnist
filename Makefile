@@ -4,7 +4,7 @@ ECHO = echo
 RM = rm -f
 
 CFLAGS = -Wall -Werror -ggdb3 -funroll-loops
-CXXFLAGS = -std=c++20 -Wall -Werror -ggdb3 -funroll-loops
+CXXFLAGS = -std=c++14 -Wall -Werror -ggdb3 -funroll-loops
 TEXFLAGS = -shell-escape -interaction=nonstopmode -file-line-error --interaction=batchmode
 
 BIN = main

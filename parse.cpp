@@ -12,8 +12,41 @@ using std::ofstream;
 using std::vector;
 using std::regex;
 using std::regex_match;
+using std::regex_search;
+using std::cmatch;
 using std::smatch;
 
+
+class CNN_LAYER
+{
+};
+
+class CONV2D : public CNN_LAYER
+{
+	public:
+		int depth;
+		int filters;
+		int kernel_size;
+		int stride;
+		vector<vector<vector<double> > > plain_kernals;
+};
+
+class LINEAR : public CNN_LAYER
+{
+	public:
+		int in_feature;
+		int out_feature;
+		vector<vector<vector<double> > > plain_weights;
+};
+
+class CNN_MODEL
+{
+	public:
+		string name;
+		int num_conv2d;
+		int num_linear;
+		vector<CNN_LAYER> layer;
+};
 
 string get_str_between_two_str(const string s, const string start_delim, const string stop_delim)
 {
@@ -28,24 +61,7 @@ string get_str_between_two_str(const string s, const string start_delim, const s
 	else
 		substring = s.substr(end_pos_of_first_delim, last_delim_pos - end_pos_of_first_delim);
 	
-	// cout << s << first_delim_pos << "    " << last_delim_pos << endl;
-	// cout << substring << endl;
-	// cout << "----------------------------------------------------------------------" << endl;
 	return substring;
-}
-
-void read_model(string s)
-{
-	smatch sm;
-	regex e ("(CNN)(.*)");
-	regex_match (s, sm, e);
-	for (unsigned i=0; i<sm.size(); ++i)
-	{
-		cout << "i:" << i << " ";
-		cout << "[" << sm[i] << "] ";
-	}
-	// if (regex_match (s, e))
-	// 	cout << regex_match ("subject", regex("(sub)(.*)"));
 }
 
 string read_file(string file_path)
@@ -60,36 +76,52 @@ string read_file(string file_path)
 	return text;
 }
 
-
-int main()
+vector<CNN_MODEL> read_model(string file_text)
 {
-	string path = "trained_weight2.txt";
-	string file_text = read_file(path);
 	string text = file_text;
 	string delim_start = "MODEL_START";
 	string delim_end = "MODEL_END";
-
-	// printf("%d==\n", text[text.length()-2]);
-	// text = "fdsafMODEL_START\n a\nMODEL_END\nMODEL_START\n bb\nMODEL_END\nMODEL_START\n ccc\nMODEL_END\nssss\n";
-	// text = "0123456789\n";
 	string substring = text;
-	vector<string> model;
+
+	vector<string> model_string;
 	while (text.length() != 0)
 	{
 		substring = get_str_between_two_str(text, delim_start, delim_end);
 		if (substring == "")
 			break;
-
-		model.push_back(substring);
+		model_string.push_back(substring);
 		text = text.substr(text.find(delim_end) + delim_end.length());
 	}
 
-	for (auto m: model)
+	vector<CNN_MODEL> cnn_model;
+	for (auto m: model_string)
 	{
-		cout << m << endl;
-		cout << "===========================================================================" << endl;
+		// cout << m << endl;
+		// cout << "===========================================================================" << endl;
+		// read_model(m);
+		smatch sm;
+		regex e ("(CNN)(.*)(_)(.*)");
+		regex_search (m, sm, e);
 
+		CNN_MODEL model;
+		model.num_conv2d = stoi(sm.str(2));
+		model.num_linear = stoi(sm.str(4));
+
+
+		cnn_model.push_back(model);
 	}
+
+	return cnn_model;
+}
+
+
+int main()
+{
+	string path = "trained_weight3.txt";
+	string file_text = read_file(path);
+
+	vector<CNN_MODEL> model = read_model(file_text);
+
 
 	return 0;
 }
