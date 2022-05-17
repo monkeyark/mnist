@@ -18,9 +18,9 @@ using std::smatch;
 string get_str_between_two_str(const string s, const string start_delim, const string stop_delim)
 {
 	string substring;
-	unsigned first_delim_pos = s.find_first_of(start_delim);
+	unsigned first_delim_pos = s.find(start_delim);
 	unsigned end_pos_of_first_delim = first_delim_pos + start_delim.length();
-	unsigned last_delim_pos = s.find_first_of(stop_delim, end_pos_of_first_delim);
+	unsigned last_delim_pos = s.find(stop_delim);
 	unsigned end_pos_of_last_delim = last_delim_pos + stop_delim.length();
 
 	if (end_pos_of_first_delim >= s.length() || end_pos_of_last_delim >= s.length())
@@ -28,9 +28,9 @@ string get_str_between_two_str(const string s, const string start_delim, const s
 	else
 		substring = s.substr(end_pos_of_first_delim, last_delim_pos - end_pos_of_first_delim);
 	
-	// cout << s << endl;
-	cout << substring << endl;
-	cout << "----------------------------------------------------------------------" << endl;
+	// cout << s << first_delim_pos << "    " << last_delim_pos << endl;
+	// cout << substring << endl;
+	// cout << "----------------------------------------------------------------------" << endl;
 	return substring;
 }
 
@@ -63,14 +63,14 @@ string read_file(string file_path)
 
 int main()
 {
-	string path = "trained_weight1.txt";
+	string path = "trained_weight2.txt";
 	string file_text = read_file(path);
 	string text = file_text;
 	string delim_start = "MODEL_START";
 	string delim_end = "MODEL_END";
 
 	// printf("%d==\n", text[text.length()-2]);
-	text = "fdsafMODEL_START\n a\nMODEL_END\nMODEL_START\n bb\nMODEL_END\nMODEL_START\n ccc\nMODEL_END\nssss\n";
+	// text = "fdsafMODEL_START\n a\nMODEL_END\nMODEL_START\n bb\nMODEL_END\nMODEL_START\n ccc\nMODEL_END\nssss\n";
 	// text = "0123456789\n";
 	string substring = text;
 	vector<string> model;
@@ -84,10 +84,12 @@ int main()
 		text = text.substr(text.find(delim_end) + delim_end.length());
 	}
 
-	// for (auto m: model)
-	// {
-	// 	cout << m << endl;
-	// }
+	for (auto m: model)
+	{
+		cout << m << endl;
+		cout << "===========================================================================" << endl;
+
+	}
 
 	return 0;
 }

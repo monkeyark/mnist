@@ -15,7 +15,7 @@ all: $(BIN) etags
 $(BIN): $(OBJS)
 	@$(ECHO) Linking $@
 	@$(CXX) $^ -o $@
-	@$(ECHO) Generating DevDocs $@
+	@$(ECHO) Generating executable $@
 -include $(OBJS:.o=.d)
 
 %.o: %.c
