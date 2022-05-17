@@ -4,6 +4,6 @@
 #include <string>
 using std::string;
 
-void read_file(string file_path);
+string read_file(string file_path);
 
 #endif
