@@ -99,13 +99,16 @@ vector<CNN_MODEL> read_model(string file_text)
 		// cout << m << endl;
 		// cout << "===========================================================================" << endl;
 		// read_model(m);
-		smatch sm;
-		regex e ("(CNN)(.*)(_)(.*)");
-		regex_search (m, sm, e);
+		smatch sm1, sm2;
+		regex cnn ("(CNN)(.*)(_)(.*)");
+		regex_search (m, sm1, cnn);
+		regex tensor ("(tensor([)(.*)(],\ndtype=torch.float64)");
+		regex_search (m, sm2, tensor);
+		cout << sm2[0] << endl;
 
 		CNN_MODEL model;
-		model.num_conv2d = stoi(sm.str(2));
-		model.num_linear = stoi(sm.str(4));
+		model.num_conv2d = stoi(sm1.str(2));
+		model.num_linear = stoi(sm1.str(4));
 
 
 		cnn_model.push_back(model);
